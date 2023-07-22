@@ -3,10 +3,14 @@ import { createGqlResponseSchema, gqlResponseSchema, schema } from './schemas.js
 import { graphql } from 'graphql';
 import userResolvers from './resolvers/user.js';
 import memberResolvers from './resolvers/member.js';
+import postResolvers from './resolvers/post.js';
+import profileResolvers from './resolvers/profile.js';
 
 const rootValue = {
   ...userResolvers,
   ...memberResolvers,
+  ...postResolvers,
+  ...profileResolvers,
 };
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {

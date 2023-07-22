@@ -3,6 +3,8 @@ import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema } from 'g
 import { UUIDType } from './types/uuid.js';
 import { ChangeUserInputType, CreateUserInputType, UserType } from './types/user.js';
 import { MemberType, MemberTypeIdEnum } from './types/member.js';
+import { ChangePostInputType, CreatePostInputType, PostType } from './types/post.js';
+import { ChangeProfileInputType, CreateProfileInputType, ProfileType } from './types/profile.js';
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -41,7 +43,25 @@ const Query = new GraphQLObjectType({
     },
     memberTypes: {
       type: new GraphQLList(MemberType)
-    }
+    },
+    post: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
+    posts: {
+      type: new GraphQLList(PostType),
+    },
+    profile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
+    profiles: {
+      type: new GraphQLList(ProfileType),
+    },
   }
 })
 
@@ -66,7 +86,45 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: {type: new GraphQLNonNull(UUIDType) }
       }
-    }
+    },
+    createPost: {
+      type: PostType,
+      args: {
+        dto: { type: CreatePostInputType },
+      },
+    },
+    changePost: {
+      type: PostType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: ChangePostInputType },
+      },
+    },
+    deletePost: {
+      type: UUIDType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
+    createProfile: {
+      type: ProfileType,
+      args: {
+        dto: { type: CreateProfileInputType },
+      },
+    },
+    changeProfile: {
+      type: ProfileType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+        dto: { type: ChangeProfileInputType },
+      },
+    },
+    deleteProfile: {
+      type: UUIDType,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
   }
 })
 
