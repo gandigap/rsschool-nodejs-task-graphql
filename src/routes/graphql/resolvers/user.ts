@@ -5,11 +5,14 @@ export const getUser = async ({ id }: ID, { prisma }: Context) => {
     return await prisma.user.findUnique({ where: { id } });    
 };
 
-export  const getUsers = async(_: Data, { prisma }: Context) => {
+export  const getUsers = async (_: Data, { prisma }: Context) => {
     return await prisma.user.findMany()
 }
 
-export  const createUser = async({ dto: data } : { dto: UserInput }, { prisma }: Context ) => {
+export  const createUser = async (
+    { dto: data } : { dto: UserInput },
+    { prisma }: Context 
+) => {
     return await prisma.user.create({ data })
 }
 

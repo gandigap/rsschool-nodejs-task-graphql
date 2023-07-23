@@ -1,15 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import { Context, ID } from '../types/common.js';
+import { Context, Data, ID } from '../types/common.js';
 import { ProfileInput } from '../types/profile.js';
 import { MemberTypeId } from '../../member-types/schemas.js';
 
-const prisma = new PrismaClient();
-
-const getProfile = async (args: ID) => {
-    return await prisma.profile.findUnique({ where: { id: args.id }});
+const getProfile = async ({ id }: ID, { prisma }: Context) => {
+    return await prisma.profile.findUnique({ where: { id }});
 };
 
-const getProfiles = async () => {
+const getProfiles = async (_: Data, { prisma }: Context) => {
     return await prisma.profile.findMany();
 };
 

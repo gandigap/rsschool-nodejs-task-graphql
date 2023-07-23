@@ -1,16 +1,13 @@
-import { PrismaClient } from '@prisma/client';
-import { Context, ID } from '../types/common.js';
+import { Context, Data, ID } from '../types/common.js';
 import { PostInput } from '../types/post.js';
 
-const prisma = new PrismaClient();
-
-const getPost = async ({ id}: ID) => {
+const getPost = async ({ id}: ID, { prisma }: Context) => {
     return await prisma.post.findUnique({
         where: { id }
     });
 };
 
-const getPosts = async () => {
+const getPosts = async (_: Data, { prisma }: Context) => {
     return await prisma.post.findMany();
 };
 
