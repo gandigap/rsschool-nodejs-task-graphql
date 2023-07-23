@@ -31,14 +31,14 @@ const Query = new GraphQLObjectType({
     user: {
       type: UserType,
       args: {
-        id: { type : new GraphQLNonNull(UUIDType) }
+        id: { type: new GraphQLNonNull(UUIDType) }
       }
     },
-    users: { type: new GraphQLList(UserType)},
+    users: { type: new GraphQLList(UserType) },
     memberType: {
       type: MemberType,
       args: {
-        id: { type: MemberTypeIdEnum}
+        id: { type: new GraphQLNonNull(MemberTypeIdEnum) }
       }
     },
     memberTypes: {
@@ -62,22 +62,8 @@ const Query = new GraphQLObjectType({
     profiles: {
       type: new GraphQLList(ProfileType),
     },
-    subscribeTo: {
-      type: UserType,
-      args: {
-        userId: { type: new GraphQLNonNull(UUIDType) },
-        authorId: { type: new GraphQLNonNull(UUIDType) },
-      }
-    },
-    unsubscribeFrom: {
-      type: GraphQLString,
-      args: {
-        userId: { type: new GraphQLNonNull(UUIDType) },
-        authorId: { type: new GraphQLNonNull(UUIDType) },
-      }
-    }
-  }
-})
+  },
+});
 
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -98,50 +84,63 @@ const Mutation = new GraphQLObjectType({
     deleteUser: {
       type: UUIDType,
       args: {
-        id: {type: new GraphQLNonNull(UUIDType) }
+        id: { type: new GraphQLNonNull(UUIDType) }
       }
     },
     createPost: {
       type: PostType,
       args: {
         dto: { type: CreatePostInputType },
-      },
+      }
     },
     changePost: {
       type: PostType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: ChangePostInputType },
-      },
+      }
     },
     deletePost: {
       type: UUIDType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
-      },
+      }
     },
     createProfile: {
       type: ProfileType,
       args: {
         dto: { type: CreateProfileInputType },
-      },
+      }
     },
     changeProfile: {
       type: ProfileType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: ChangeProfileInputType },
-      },
+      }
     },
     deleteProfile: {
       type: UUIDType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
-      },
+      }
     },
+    subscribeTo: {
+      type: UserType,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      }
+    },
+    unsubscribeFrom: {
+      type: GraphQLString,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      }
+    }
   }
-})
-
+});
 
 export const schema = new GraphQLSchema({
   query: Query,

@@ -15,7 +15,7 @@ const rootValue = {
 };
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
-  const { prisma }  = fastify;
+  const { prisma } = fastify;
 
   fastify.route({
     url: '/',
