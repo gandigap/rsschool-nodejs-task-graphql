@@ -2,7 +2,6 @@ import { GraphQLInputObjectType, GraphQLNonNull, GraphQLObjectType, GraphQLStrin
 import { UUIDType } from "./uuid.js";
 import { UserType } from "./user.js";
 import { Context, Data, ID } from "./common.js";
-import { getUser } from "../resolvers/user.js";
 
 export interface PostInput {
     title: string;
@@ -20,9 +19,7 @@ export const PostType = new GraphQLObjectType({
         content: { type: new GraphQLNonNull(GraphQLString)},
         author: {
             type: UserType,
-            resolve: async (source: Post, _: Data, context: Context) => {
-                return await getUser({ id: source.authorId }, context)
-            }                
+            resolve: async (source: Post, _: Data, { userLoader }: Context) => userLoader.load(source.authorId),              
         }
     })
 })

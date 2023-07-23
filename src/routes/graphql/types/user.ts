@@ -3,11 +3,8 @@ import { GraphQLFloat, GraphQLInputObjectType,
   GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
 import { UUIDType } from "./uuid.js";
 import { ProfileType } from "./profile.js";
-import { getPostsByUserId } from "../resolvers/post.js";
-import { getProfileByUserId } from "../resolvers/profile.js";
 import { PostType } from "./post.js";
-import { Context, Data, ID } from "./common.js";
-import { getUserFollowers, getUserSubscriptions } from "../resolvers/user.js";
+import { Context, Data, ID, Subscription } from "./common.js";
 
 export const UserType = new GraphQLObjectType({
   name: 'User',
@@ -17,23 +14,29 @@ export const UserType = new GraphQLObjectType({
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
     profile: {
       type: ProfileType as GraphQLObjectType,
-      resolve: async (source: User, _: Data, context: Context) =>
-        await getProfileByUserId(source.id, context),
+      resolve: async(
+        source: User, _: Data, { profileByUserIdLoader }: Context
+        ) => profileByUserIdLoader.load(source.id)
     },
     posts: {
       type: new GraphQLList(PostType),
-      resolve: async (source: User, _: Data, context: Context) =>
-        await getPostsByUserId(source.id, context),
+      resolve: async(
+        source: User, _: Data, { postsByAuthorIdLoader }: Context
+        ) => postsByAuthorIdLoader.load(source.id)
     },
     userSubscribedTo: {
       type: new GraphQLList(UserType),
-      resolve: async (source: User, _: Data, context: Context) =>
-        await getUserSubscriptions(source.id, context),
+      resolve: async (source: User, _: Data, { userLoader }: Context) =>
+        source.userSubscribedTo
+          ? userLoader.loadMany(source.userSubscribedTo.map(({ authorId }) => authorId))
+          : null
     },
     subscribedToUser: {
       type: new GraphQLList(UserType),
-      resolve: async (source: User, _: Data, context: Context) =>
-        await getUserFollowers(source.id, context),
+      resolve: async (source: User, _: Data, { userLoader }: Context) =>
+        source.subscribedToUser
+          ? userLoader.loadMany(source.subscribedToUser.map(({ subscriberId }) => subscriberId))
+          : null
     }   
   })
 });
@@ -54,7 +57,10 @@ export const ChangeUserInputType = new GraphQLInputObjectType({
   }
 });
 
-export interface User extends ID, UserInput {}
+export interface User extends ID, UserInput {
+  userSubscribedTo?: Subscription[];
+  subscribedToUser?: Subscription[];
+}
 
 export interface UserInput {
   name: string;

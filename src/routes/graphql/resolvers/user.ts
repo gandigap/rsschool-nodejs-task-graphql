@@ -1,22 +1,22 @@
-import { ID, Context, Data, Subscription } from "../types/common.js";
+import { ID, Context, Data, SubscriptionMutation } from "../types/common.js";
 import { UserInput } from "../types/user.js";
 
-export const getUser = async ({ id }: ID, { prisma }: Context) => {   
+const getUser = async ({ id }: ID, { prisma }: Context) => {   
     return await prisma.user.findUnique({ where: { id } });    
 };
 
-export  const getUsers = async (_: Data, { prisma }: Context) => {
+const getUsers = async (_: Data, { prisma }: Context) => {
     return await prisma.user.findMany()
-}
+};
 
-export  const createUser = async (
+const createUser = async (
     { dto: data } : { dto: UserInput },
     { prisma }: Context 
 ) => {
     return await prisma.user.create({ data })
-}
+};
 
-export const changeUser = async (
+const changeUser = async (
     { id, dto: data }: ID & { dto: Partial<UserInput> },
     { prisma}: Context
 ) => {
@@ -27,34 +27,34 @@ export const changeUser = async (
     } catch  {
         return null
     }
-}
+};
 
-export const deleteUser = async ({ id }: ID, { prisma }: Context) => {
+const deleteUser = async ({ id }: ID, { prisma }: Context) => {
     try {
         await prisma.user.delete({ where: {id}})
         return id
     } catch  {
         return null;
     }
-}
+};
 
 const subscribeTo = async (
-    { userId: id, authorId }: Subscription,
+    { userId: id, authorId }: SubscriptionMutation,
     { prisma }: Context,
-  ) => {
+) => {
     try {
-      const user = prisma.user.update({
-        where: { id },
-        data: { userSubscribedTo: { create: { authorId } } },
-      });
-      return user;
+        const user = prisma.user.update({
+            where: { id },
+            data: { userSubscribedTo: { create: { authorId } } }
+        });
+        return user;
     } catch {
-      return null;
+        return null;
     }
-  };
+};
   
 const unsubscribeFrom = async (
-    { userId: subscriberId, authorId }: Subscription,
+    { userId: subscriberId, authorId }: SubscriptionMutation,
     { prisma }: Context,
 ) => {
     try {
@@ -64,21 +64,6 @@ const unsubscribeFrom = async (
     } catch {
         return null;
     }
-};
-  
-export const getUserSubscriptions = async (
-    subscriberId: string,
-    { prisma }: Context,
-) => {
-    return await prisma.user.findMany({
-        where: { subscribedToUser: { some: { subscriberId } } }
-    });
-};
-  
-export const getUserFollowers = async (authorId: string, { prisma }: Context) => {
-    return await prisma.user.findMany({
-        where: { userSubscribedTo: { some: { authorId } } }
-    });
 };
 
 export default {

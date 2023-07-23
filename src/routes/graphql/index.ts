@@ -6,6 +6,7 @@ import memberResolvers from './resolvers/member.js';
 import postResolvers from './resolvers/post.js';
 import profileResolvers from './resolvers/profile.js';
 import depthLimit from 'graphql-depth-limit';
+import { getDataLoaders } from './dataLoaders/dataLoaders.js';
 
 const rootValue = {
   ...userResolvers,
@@ -16,6 +17,7 @@ const rootValue = {
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
+  const dataLoaders = getDataLoaders(prisma);
 
   fastify.route({
     url: '/',
@@ -38,7 +40,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         source: req.body.query,
         rootValue,
         variableValues: req.body.variables,
-        contextValue: { prisma }
+        contextValue: { prisma, ...dataLoaders }
       });
       return response;
     },

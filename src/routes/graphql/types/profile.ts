@@ -9,9 +9,7 @@ import {
   import { MemberType, MemberTypeIdEnum } from './member.js';
   import { Context, ID, Data } from './common.js';
   import { MemberTypeId } from '../../member-types/schemas.js';
-  import { getMemberType } from '../resolvers/member.js';
   import { UserType } from './user.js';
-  import { getUser } from '../resolvers/user.js';
   
   export interface ProfileInput {
     isMale: boolean;
@@ -30,15 +28,15 @@ export const ProfileType = new GraphQLObjectType({
         yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
         memberType: {
             type: new GraphQLNonNull(MemberType),
-            resolve: async (source: Profile, _: Data, context: Context) => {
-                return await getMemberType({ id: source.memberTypeId }, context)
-            }                
+            resolve: async (
+              source: Profile, _: Data, { memberTypeLoader }: Context
+              ) => memberTypeLoader.load(source.memberTypeId)
         },
         user: {
-            type: UserType ,
-            resolve: async (source: Profile, _: Data, context: Context) => {
-                return await getUser({ id: source.userId }, context)
-            }
+            type: UserType as GraphQLObjectType ,
+            resolve: async (
+              source: Profile, _: Data, { userLoader }: Context
+              ) => userLoader.load(source.userId),
         }
     }),
 });

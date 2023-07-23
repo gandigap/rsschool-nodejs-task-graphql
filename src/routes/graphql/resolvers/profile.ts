@@ -41,19 +41,6 @@ const deleteProfile = async ({ id }: ID, { prisma }: Context) => {
     }
 };
 
-export const getProfileByUserId = async (userId: string, { prisma }: Context) => {
-    return await prisma.profile.findUnique({
-      where: { userId },
-    });
-};
-  
-export const getProfilesByMemberTypeId = async (
-    memberTypeId: MemberTypeId,
-    { prisma }: Context,
-) => {
-    return await prisma.profile.findMany({ where: { memberTypeId } });
-};
-
 export default {
     profile: getProfile,
     profiles: getProfiles,
