@@ -1,5 +1,5 @@
 import { Type } from '@fastify/type-provider-typebox';
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql';
 import { UUIDType } from './types/uuid.js';
 import { ChangeUserInputType, CreateUserInputType, UserType } from './types/user.js';
 import { MemberType, MemberTypeIdEnum } from './types/member.js';
@@ -62,6 +62,20 @@ const Query = new GraphQLObjectType({
     profiles: {
       type: new GraphQLList(ProfileType),
     },
+    subscribeTo: {
+      type: UserType,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      }
+    },
+    unsubscribeFrom: {
+      type: GraphQLString,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      }
+    }
   }
 })
 

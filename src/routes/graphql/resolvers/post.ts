@@ -38,7 +38,7 @@ const deletePost = async ({ id }: ID, { prisma }: Context) => {
     }
 };
 
-export const getPostsByUserId = async (authorId: string) => {
+export const getPostsByUserId = async (authorId: string, { prisma }: Context) => {
     return await prisma.post.findMany({ where: { authorId } });
 };
 
