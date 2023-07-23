@@ -38,7 +38,7 @@ const Query = new GraphQLObjectType({
     memberType: {
       type: MemberType,
       args: {
-        id: { type: new GraphQLNonNull(MemberTypeIdEnum)}
+        id: { type: MemberTypeIdEnum}
       }
     },
     memberTypes: {
@@ -129,4 +129,21 @@ const Mutation = new GraphQLObjectType({
 })
 
 
-export const schema = new GraphQLSchema({query: Query, mutation : Mutation})
+export const schema = new GraphQLSchema({
+  query: Query,
+  mutation : Mutation,
+  types: [
+    UUIDType,
+    MemberType,
+    MemberTypeIdEnum,
+    PostType,
+    UserType,
+    ProfileType,
+    CreateUserInputType,
+    ChangeUserInputType,
+    CreatePostInputType,
+    ChangePostInputType,
+    CreateProfileInputType,
+    ChangeProfileInputType
+  ]
+})
