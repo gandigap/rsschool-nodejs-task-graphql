@@ -10,7 +10,7 @@ export const gqlResponseSchema = Type.Partial(
   Type.Object({
     data: Type.Any(),
     errors: Type.Any(),
-  }),
+  })
 );
 
 export const createGqlResponseSchema = {
@@ -21,8 +21,8 @@ export const createGqlResponseSchema = {
     },
     {
       additionalProperties: false,
-    },
-  ),
+    }
+  )
 };
 
 const Query = new GraphQLObjectType({
@@ -48,7 +48,7 @@ const Query = new GraphQLObjectType({
       type: PostType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
-      },
+      }
     },
     posts: {
       type: new GraphQLList(PostType),
@@ -61,8 +61,8 @@ const Query = new GraphQLObjectType({
     },
     profiles: {
       type: new GraphQLList(ProfileType),
-    },
-  },
+    }
+  }
 });
 
 const Mutation = new GraphQLObjectType({
